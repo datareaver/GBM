@@ -1,0 +1,67 @@
+# BPR Model Training Report
+
+## Model Training Description
+
+--------------------------------
+
+### Version
+
+`r row.names(form)[rows]`
+
+### User
+
+`r Sys.getenv("USERNAME")`
+
+### Runtime
+
+`r Sys.time()`
+
+### Data
+    
+`r data`
+
+### Formula 
+
+`r form[rows]`
+
+### Training Controls
+
+`r paste('Trees = ',num.trees,sep = '')`
+
+`r paste('Depth = ',depth,sep = '')`
+
+`r paste('Shrinkage = ',shrink,sep = '')`
+
+--------------------------------
+
+## Training Summary
+
+```{r,echo=F}
+library(ggplot2)
+fit.gbm
+```
+
+--------------------------------
+
+## Variable Importance
+
+```{r,echo=F}
+summary(fit.gbm)
+```
+
+--------------------------------
+
+## Plot Iterations of Final Model
+
+```{r,echo=F}
+par(mfrow = c(2,1))
+gbm.perf(fit.gbm,oobag.curve = T)
+par(mfrow = c(1,1))
+```
+
+## Concordance
+
+```{r,echo=F}
+pred <- predict(fit.gbm)
+survConcordance(Surv(time0,time1,outcome)~pred,data = theDta)
+```
